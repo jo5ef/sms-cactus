@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="smscactus settings" android:key="parent">
+	<EditTextPreference android:key="serverUrl"
+		android:title="@string/settings.serverUrl.title"
+		android:summary="@string/settings.serverUrl.summary"
+		android:defaultValue="http://localhost:8080/sms-cactus/msg"
+		android:inputType="textUri"/>	
+	<EditTextPreference android:key="serverUsr"
+		android:title="@string/settings.serverUsr.title"
+		android:summary="@string/settings.serverUsr.summary"
+		android:defaultValue="smscactus"/>
+	<EditTextPreference android:key="serverPwd"
+		android:title="@string/settings.serverPwd.title"
+		android:summary="@string/settings.serverPwd.summary"
+		android:defaultValue="smscactus"
+		android:password="true"/>
+</PreferenceScreen>
