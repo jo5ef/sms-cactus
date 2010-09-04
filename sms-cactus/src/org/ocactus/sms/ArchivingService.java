@@ -81,10 +81,13 @@ public class ArchivingService extends Service {
 					addUnarchived(data, "content://sms/sent", cutoffId, false)
 				);
 				
-				client.archive(data.toArray(new Sms[] {}));
-				preferences.setArchivingCutoffId(newCutoffId);
-				
-				Log.i(TAG, "Successfully archived " + data.size() + " messages.");
+				if(data.size() > 0) {
+					client.archive(data.toArray(new Sms[] {}));
+					preferences.setArchivingCutoffId(newCutoffId);
+					Log.i(TAG, "Successfully archived " + data.size() + " messages.");
+				} else {
+					Log.i(TAG, "Nothing to archive.");
+				}
 				
 			} catch(Exception ex) {
 				Log.e(TAG, "error archiving messages", ex);

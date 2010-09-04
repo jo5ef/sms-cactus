@@ -71,6 +71,8 @@ public class SendService extends Service {
 				
 				Log.i(TAG, "successfully sent " + sendlist.length + " messages.");
 				
+				startService(new Intent(SendService.this, ArchivingService.class));
+				
 			} catch(Exception ex) {
 				Log.e(TAG, "Error sending messages.", ex);
 			} finally {
