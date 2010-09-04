@@ -16,5 +16,5 @@ CREATE TABLE sendlist (
 );
 
 
-GRANT SELECT, INSERT, UPDATE ON sendlist TO 'smscactus'@'localhost';
+GRANT SELECT, INSERT, DELETE ON sendlist TO 'smscactus'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON messages TO 'smscactus'@'localhost';

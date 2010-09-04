@@ -1,11 +1,12 @@
 package org.ocactus.sms.prefs;
 
+import java.net.URI;
+
 public interface IPreferences {
 
-	String getArchivingUrl();
-	String getSendlistUrl();
-	String getUsername();
-	String getPassword();
+	URI getServerUrl();
+	String getServerUser();
+	String getServerPassword();
 	int getArchivingCutoffId();
 	void setArchivingCutoffId(int id);
 }

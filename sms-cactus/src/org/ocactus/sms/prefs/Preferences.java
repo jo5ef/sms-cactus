@@ -1,78 +1,55 @@
 package org.ocactus.sms.prefs;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.telephony.TelephonyManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Preferences implements IPreferences {
 	
+	private static final String TAG = Preferences.class.getCanonicalName();
+	
 	public static final String ENCODING = "UTF-8";
 	
-	private static final String PREFERENCES = "org.ocactus.sms";
-	private static final Map<String, String> DEFAULTS = new HashMap<String, String>();
-	
-	private static final String USER = "user";
-	private static final String PASSWORD = "password";
-	private static final String ARCHIVEURL = "archiveurl";
-	private static final String SENDLISTURL = "sendlisturl";
+	private static final String SERVERUSR = "serverUsr";
+	private static final String SERVERPWD = "serverPwd";
+	private static final String SERVERURL = "serverUrl";
 	private static final String ARCHIVING_CUTOFFID = "smacutoff";
 	
-	static {
-		DEFAULTS.put(USER, "android");
-		DEFAULTS.put(PASSWORD, "aNdr01d");
-		DEFAULTS.put(ARCHIVEURL, "http://172.16.0.16:8080/sms-cactus/msg/archive");
-		DEFAULTS.put(SENDLISTURL, "http://172.16.0.16:8080/sms-cactus/msg/sendlist");
-		DEFAULTS.put(ARCHIVING_CUTOFFID, "0");
-	}
-	
-	private SharedPreferences sharedPreferences;
-	private Context context;
+	private SharedPreferences sharedPrefs;
 	
 	public Preferences(Context context) {
-		this.context = context;
-		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-	}
-		
-	public void set(String key, String value) {
-		Editor editor = sharedPreferences.edit();
-		editor.putString(key, value);
-		editor.commit();
-	}
-	
-	public String get(String key) {
-		return sharedPreferences.getString(key, DEFAULTS.get(key));
-	}
-	
-	public String getMyPhoneNumber() {
-		TelephonyManager phone = (TelephonyManager) context.getSystemService("phone");
-		return phone.getLine1Number();
-	}
-	
-	public int getArchivingCutoffId() {
-		return Integer.parseInt(get(ARCHIVING_CUTOFFID));
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 	
 	public void setArchivingCutoffId(int id) {
-		set(ARCHIVING_CUTOFFID, id + "");
+		Editor editor = sharedPrefs.edit();
+		editor.putInt(ARCHIVING_CUTOFFID, id);
+		editor.commit();
 	}
 	
-	public String getArchivingUrl() {
-		return get(ARCHIVEURL);
+	public int getArchivingCutoffId() {
+		return sharedPrefs.getInt(ARCHIVING_CUTOFFID, 0);
 	}
 	
-	public String getSendlistUrl() {
-		return get(SENDLISTURL);
+	public URI getServerUrl() {
+		try {
+			return new URI(sharedPrefs.getString(SERVERURL, "http://localhost/sms"));
+		} catch(URISyntaxException ex) {
+			Log.e(TAG, "Invalid server url!", ex);
+			return null;
+		}
 	}
-
-	public String getUsername() {
-		return get(USER);
-	}	
 	
-	public String getPassword() {
-		return get(PASSWORD);
+	public String getServerUser() {
+		return sharedPrefs.getString(SERVERUSR, "");
+	}
+	
+	public String getServerPassword() {
+		return sharedPrefs.getString(SERVERPWD, "");
 	}
 }

@@ -32,14 +32,13 @@ public class CactusClient implements ICactusClient {
 	
 	private void setupRequest(HttpRequest req) {
 		req.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(
-			preferences.getUsername(), preferences.getPassword()), Preferences.ENCODING, false));
+			preferences.getServerUser(), preferences.getServerPassword()), Preferences.ENCODING, false));
 	}
 	
 	public void archive(Sms[] messages) throws Exception {
 		
 		JSONArray data = JSONUtils.getJSONArray(messages);
-		
-		HttpPost httpPost = new HttpPost(preferences.getArchivingUrl());
+		HttpPost httpPost = new HttpPost(preferences.getServerUrl().resolve("./archive").toString());
 		setupRequest(httpPost);
 		httpPost.setEntity(new StringEntity(data.toString(), Preferences.ENCODING));
 		HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -50,7 +49,7 @@ public class CactusClient implements ICactusClient {
 	
 	public PendingSms[] sendlist() throws Exception {
 		
-		HttpGet req = new HttpGet(preferences.getSendlistUrl());
+		HttpGet req = new HttpGet(preferences.getServerUrl().resolve("./sendlist"));
 		setupRequest(req);
 		HttpResponse resp = httpClient.execute(req);
 		if(resp.getStatusLine().getStatusCode() != 200) {
