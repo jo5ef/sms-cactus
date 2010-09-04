@@ -3,7 +3,9 @@ package org.ocactus.sms.server;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.sql.DriverManager;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,11 +22,28 @@ public class SmsCactusServlet extends ServletBase {
 	private ISmsCactus server;
 	
 	public SmsCactusServlet() {
-		this(new SmsCactus());
+		this(null);
 	}
 	
 	public SmsCactusServlet(ISmsCactus server) {
-		this.server = server;
+		this.server = server;		
+	}
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		if(server == null)
+		{
+			try {
+				 Class.forName(config.getInitParameter("dbDriver")).newInstance();
+				 this.server = new SmsCactus(DriverManager.getConnection(
+					config.getInitParameter("dbConnection"),
+					config.getInitParameter("dbUser"),
+					config.getInitParameter("dbPassword")));
+				 
+			} catch(Exception ex) {
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 
 	@Override

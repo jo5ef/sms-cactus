@@ -1,7 +1,6 @@
 package org.ocactus.sms.server;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,14 +16,8 @@ public class SmsCactus implements ISmsCactus {
 
 	private Connection db;
 	
-	public SmsCactus() {
-		try {
-			 Class.forName("com.mysql.jdbc.Driver").newInstance();
-			 db = DriverManager.getConnection ("jdbc:mysql://localhost/smscactus", "root", "");
-			 
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
+	public SmsCactus(Connection db) {
+		this.db = db;
 	}
 	
 	public Sms[] latest(int count) {
