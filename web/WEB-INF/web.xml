@@ -19,7 +19,7 @@
 
 		<init-param>
 			<param-name>dbConnection</param-name>
-			<param-value>jdbc:mysql://localhost/smscactus?autoReconnect=true</param-value>
+			<param-value><![CDATA[jdbc:mysql://localhost/smscactus?useUnicode=yes&characterEncoding=utf8&autoReconnect=true]]></param-value>
 		</init-param>
 
 		<init-param>

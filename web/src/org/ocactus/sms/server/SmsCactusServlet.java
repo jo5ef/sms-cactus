@@ -19,6 +19,7 @@ import org.ocactus.sms.common.Sms;
 
 public class SmsCactusServlet extends ServletBase {
 	
+	private static final Charset ENCODING = Charset.forName("UTF-8");
 	private ISmsCactus server;
 	
 	public SmsCactusServlet() {
@@ -45,6 +46,11 @@ public class SmsCactusServlet extends ServletBase {
 			}
 		}
 	}
+	
+	private static void setupResponse(HttpServletResponse resp) {
+		resp.setCharacterEncoding(ENCODING.displayName());
+		resp.setContentType("application/json");
+	}
 
 	@Override
 	public void defaultAction(HttpServletRequest req, HttpServletResponse resp)
@@ -55,11 +61,10 @@ public class SmsCactusServlet extends ServletBase {
 	public void latest(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
 		try {
+			setupResponse(resp);
 			
 			Sms[] latest = server.latest(25);
 			JSONArray data = JSONUtils.getJSONArray(latest);
-			
-			resp.setContentType("application/json");
 			data.write(resp.getWriter());
 			
 		} catch(JSONException ex) {
@@ -81,11 +86,10 @@ public class SmsCactusServlet extends ServletBase {
 	public void sendlist(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
 		try {
+			setupResponse(resp);
 			
 			PendingSms[] sendlist = server.sendlist();
 			JSONArray data = JSONUtils.getJSONArray(sendlist);
-			
-			resp.setContentType("application/json");
 			data.write(resp.getWriter());
 			
 		} catch(JSONException ex) {
@@ -98,7 +102,7 @@ public class SmsCactusServlet extends ServletBase {
 		
 		try {
 			JSONArray data = new JSONArray(new JSONTokener(
-				new InputStreamReader(req.getInputStream(), Charset.forName("UTF-8"))));
+				new InputStreamReader(req.getInputStream(), ENCODING)));
 			
 			server.archive(JSONUtils.getSms(data));
 			
