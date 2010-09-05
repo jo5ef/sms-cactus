@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.google.android.c2dm.C2DMessaging;
+
 public class Main extends Activity {
     
 	@Override
@@ -29,6 +31,14 @@ public class Main extends Activity {
 			
 			public void onClick(View v) {
 				startService(new Intent(Main.this, SendService.class));
+			}
+		});
+        
+        Button c2dmRegisterButton = (Button) findViewById(R.id.c2dmRegisterButton);
+        c2dmRegisterButton.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				C2DMessaging.register(Main.this, "joe.blooming@gmail.com");
 			}
 		});
     }

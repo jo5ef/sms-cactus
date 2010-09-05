@@ -3,7 +3,6 @@ package org.ocactus.sms.server;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.sql.DriverManager;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,34 +15,28 @@ import org.json.JSONTokener;
 import org.ocactus.sms.common.JSONUtils;
 import org.ocactus.sms.common.PendingSms;
 import org.ocactus.sms.common.Sms;
+import org.ocactus.sms.common.Utils;
 
-public class SmsCactusServlet extends ServletBase {
+public class MsgServlet extends ServletBase {
 	
 	private static final Charset ENCODING = Charset.forName("UTF-8");
 	private ISmsCactus server;
 	
-	public SmsCactusServlet() {
+	public MsgServlet() {
 		this(null);
 	}
 	
-	public SmsCactusServlet(ISmsCactus server) {
+	public MsgServlet(ISmsCactus server) {
 		this.server = server;		
 	}
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
+		
+		super.init(config);
 		if(server == null)
 		{
-			try {
-				 Class.forName(config.getInitParameter("dbDriver")).newInstance();
-				 this.server = new SmsCactus(DriverManager.getConnection(
-					config.getInitParameter("dbConnection"),
-					config.getInitParameter("dbUser"),
-					config.getInitParameter("dbPassword")));
-				 
-			} catch(Exception ex) {
-				throw new RuntimeException(ex);
-			}
+			this.server = new SmsCactus(dbConnection);
 		}
 	}
 	
@@ -52,12 +45,6 @@ public class SmsCactusServlet extends ServletBase {
 		resp.setContentType("application/json");
 	}
 
-	@Override
-	public void defaultAction(HttpServletRequest req, HttpServletResponse resp)
-		throws ServletException, IOException {
-		latest(req, resp);
-	}
-	
 	public void latest(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
 		try {
@@ -78,9 +65,13 @@ public class SmsCactusServlet extends ServletBase {
 		String address = req.getParameter("address");
 		String text = req.getParameter("text");
 		
-		server.send(new PendingSms(address, text));
-		
-		resp.sendRedirect(req.getContextPath());
+		if(Utils.isNullOrEmpty(address) || Utils.isNullOrEmpty(text)) {
+			resp.setStatus(400);
+			resp.getWriter().write("missing text or address");
+		} else {
+			server.send(new PendingSms(address, text));
+			resp.sendRedirect("../c2dm/send");
+		}
 	}
 	
 	public void sendlist(HttpServletRequest req, HttpServletResponse resp)

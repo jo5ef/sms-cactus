@@ -8,34 +8,47 @@
 		This is the server for the sms-cactus Android application.
 	</description>
 
+	<context-param>
+		<param-name>dbDriver</param-name>
+		<param-value>com.mysql.jdbc.Driver</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>dbConnection</param-name>
+		<param-value><![CDATA[jdbc:mysql://localhost/smscactus?useUnicode=yes&characterEncoding=utf8&autoReconnect=true]]></param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>dbUser</param-name>
+		<param-value>smscactus</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>dbPassword</param-name>
+		<param-value>smscactus</param-value>
+	</context-param>
+
+
 	<servlet>
 		<servlet-name>msg</servlet-name>
-		<servlet-class>org.ocactus.sms.server.SmsCactusServlet</servlet-class>
+		<servlet-class>org.ocactus.sms.server.MsgServlet</servlet-class>
 		<description />
-		<init-param>
-			<param-name>dbDriver</param-name>
-			<param-value>com.mysql.jdbc.Driver</param-value>
-		</init-param>
-
-		<init-param>
-			<param-name>dbConnection</param-name>
-			<param-value><![CDATA[jdbc:mysql://localhost/smscactus?useUnicode=yes&characterEncoding=utf8&autoReconnect=true]]></param-value>
-		</init-param>
-
-		<init-param>
-			<param-name>dbUser</param-name>
-			<param-value>smscactus</param-value>
-		</init-param>
-
-		<init-param>
-			<param-name>dbPassword</param-name>
-			<param-value>smscactus</param-value>
-		</init-param>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>c2dm</servlet-name>
+		<servlet-class>org.ocactus.sms.server.C2DMServlet</servlet-class>
+		<description />
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>msg</servlet-name>
 		<url-pattern>/msg/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>c2dm</servlet-name>
+		<url-pattern>/c2dm/*</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>

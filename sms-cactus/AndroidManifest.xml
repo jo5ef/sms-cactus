@@ -18,6 +18,28 @@
 
 		<activity android:name=".Settings" android:label="@string/settings.title" />
 
+		<!-- Only C2DM servers can send messages for the app. If permission is 
+			not set - any other app can generate it -->
+		<receiver android:name="com.google.android.c2dm.C2DMBroadcastReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND">
+			<!-- Receive the actual message -->
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<category android:name="org.ocactus.sms" />
+			</intent-filter>
+			<!-- Receive the registration id -->
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+				<category android:name="org.ocactus.sms" />
+			</intent-filter>
+		</receiver>
+
+		<!-- In order to use the c2dm library, an application must declare a class 
+			with the name C2DMReceiver, in its own package, extending com.google.android.c2dm.C2DMBaseReceiver 
+			It must also include this section in the manifest, replacing "com.google.android.apps.chrometophone" 
+			with its package name. -->
+		<service android:name=".C2DMReceiver" />
+
 	</application>
 	<uses-sdk android:minSdkVersion="8" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
@@ -25,4 +47,18 @@
 	<uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
 	<uses-permission android:name="android.permission.READ_SMS"></uses-permission>
 	<uses-permission android:name="android.permission.WRITE_SMS"></uses-permission>
+
+	<!-- App must have this permission to use the library -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+	<!-- Only this application can receive the messages and registration result -->
+	<permission android:name="org.ocactus.sms.permission.C2D_MESSAGE"
+		android:protectionLevel="signature" />
+	<uses-permission android:name="org.ocactus.sms.permission.C2D_MESSAGE" />
+
+	<!-- This app has permission to register and receive message -->
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
 </manifest> 

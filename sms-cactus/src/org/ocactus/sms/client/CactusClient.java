@@ -38,7 +38,7 @@ public class CactusClient implements ICactusClient {
 	public void archive(Sms[] messages) throws Exception {
 		
 		JSONArray data = JSONUtils.getJSONArray(messages);
-		HttpPost httpPost = new HttpPost(preferences.getServerUrl().resolve("./archive").toString());
+		HttpPost httpPost = new HttpPost(preferences.getServerUrl().resolve("./msg/archive").toString());
 		setupRequest(httpPost);
 		httpPost.setEntity(new StringEntity(data.toString(), Preferences.ENCODING));
 		HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -49,7 +49,7 @@ public class CactusClient implements ICactusClient {
 	
 	public PendingSms[] sendlist() throws Exception {
 		
-		HttpGet req = new HttpGet(preferences.getServerUrl().resolve("./sendlist"));
+		HttpGet req = new HttpGet(preferences.getServerUrl().resolve("./msg/sendlist"));
 		setupRequest(req);
 		HttpResponse resp = httpClient.execute(req);
 		if(resp.getStatusLine().getStatusCode() != 200) {
@@ -72,5 +72,11 @@ public class CactusClient implements ICactusClient {
 		}
 		
 		return JSONUtils.getPendingSms(data);
+	}
+	
+	public void registerC2DM(String id) throws Exception {
+		HttpGet req = new HttpGet(preferences.getServerUrl().resolve("./c2dm/register?id=" + id));
+		setupRequest(req);
+		httpClient.execute(req);
 	}
 }

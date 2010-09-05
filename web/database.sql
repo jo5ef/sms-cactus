@@ -16,6 +16,12 @@ CREATE TABLE sendlist (
 	body varchar(1024) not null 
 ) CHARSET UTF8;
 
+CREATE TABLE c2dm (
+	`key` VARCHAR(24) PRIMARY KEY,
+	value VARCHAR(1024) NOT NULL
+);
+
 CREATE USER 'smscactus'@'localhost' IDENTIFIED BY 'smscactus';
 GRANT SELECT, INSERT, DELETE ON sendlist TO 'smscactus'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON messages TO 'smscactus'@'localhost';
+GRANT SELECT, INSERT, UPDATE on c2dm TO 'smscactus'@'localhost';

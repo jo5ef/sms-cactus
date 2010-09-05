@@ -111,7 +111,7 @@ public class SmsCactus implements ISmsCactus {
 		PreparedStatement stmt = db.prepareStatement(
 			"INSERT IGNORE INTO messages (id, address, body, timestamp, incoming)" +
 			"VALUES (?, ?, ?, ?, ?);");
-			//"ON DUPLICATE KEY UPDATE SET address = ?, body = ?, timestamp = ?;");
+			//"ON DUPLICATE KEY UPDATE address = ?, body = ?, timestamp = ?;");
 		
 		int paramIdx = 1;
 		
