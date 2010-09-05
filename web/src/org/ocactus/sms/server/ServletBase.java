@@ -28,6 +28,8 @@ public abstract class ServletBase extends HttpServlet {
 				ctx.getInitParameter("dbUser"),
 				ctx.getInitParameter("dbPassword"));
 			
+			dbConnection.setAutoCommit(false);
+			
 		} catch(Exception ex) {
 			throw new ServletException("error connecting to database", ex);
 		}

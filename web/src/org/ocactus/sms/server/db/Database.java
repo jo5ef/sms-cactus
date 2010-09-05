@@ -48,6 +48,7 @@ public class Database implements IKeyValueStore {
 			stmt.setString(paramIdx++, value);
 			
 			stmt.execute();
+			db.commit();
 			
 		} catch(SQLException ex) {
 			throw new RuntimeException(ex);

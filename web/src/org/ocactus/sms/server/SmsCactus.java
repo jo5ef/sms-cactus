@@ -58,6 +58,7 @@ public class SmsCactus implements ISmsCactus {
 			stmt.setString(1, sms.getAddress());
 			stmt.setString(2, sms.getBody());
 			stmt.execute();
+			db.commit();
 		} catch(SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -86,8 +87,10 @@ public class SmsCactus implements ISmsCactus {
 			
 			sb.append(");");
 			db.createStatement().execute(sb.toString());
+			db.commit();
 			
 		} catch(SQLException ex) {
+			try { db.rollback(); } catch(SQLException e) { }
 			throw new RuntimeException(ex);
 		}
 		
@@ -101,6 +104,9 @@ public class SmsCactus implements ISmsCactus {
 			for(Sms s : data) {
 				archive(s);
 			}
+			
+			db.commit();
+			
 		} catch(SQLException ex) {
 			throw new RuntimeException(ex);
 		}
