@@ -58,7 +58,6 @@ public class SmsCactus implements ISmsCactus {
 			stmt.setString(1, sms.getAddress());
 			stmt.setString(2, sms.getBody());
 			stmt.execute();
-			db.commit();
 		} catch(SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -87,7 +86,6 @@ public class SmsCactus implements ISmsCactus {
 			
 			sb.append(");");
 			db.createStatement().execute(sb.toString());
-			db.commit();
 			
 		} catch(SQLException ex) {
 			try { db.rollback(); } catch(SQLException e) { }
@@ -100,33 +98,24 @@ public class SmsCactus implements ISmsCactus {
 	public void archive(Sms[] data) {
 		
 		try {
-			//TODO: batch insert
-			for(Sms s : data) {
-				archive(s);
+			PreparedStatement stmt = db.prepareStatement(
+				"INSERT IGNORE INTO messages (id, address, body, timestamp, incoming)" +
+				"VALUES (?, ?, ?, ?, ?);");
+			
+			for(Sms sms : data) {
+				int paramIdx = 1;
+				stmt.setInt(paramIdx++, sms.getId());
+				stmt.setString(paramIdx++, sms.getAddress());
+				stmt.setString(paramIdx++, sms.getBody());
+				stmt.setTimestamp(paramIdx++, new Timestamp(sms.getTimestamp().getTime()));
+				stmt.setBoolean(paramIdx++, sms.isIncoming());
+				stmt.addBatch();
 			}
 			
-			db.commit();
+			stmt.executeBatch();
 			
 		} catch(SQLException ex) {
 			throw new RuntimeException(ex);
 		}
-	}
-	
-	private void archive(Sms sms) throws SQLException {
-		
-		PreparedStatement stmt = db.prepareStatement(
-			"INSERT IGNORE INTO messages (id, address, body, timestamp, incoming)" +
-			"VALUES (?, ?, ?, ?, ?);");
-			//"ON DUPLICATE KEY UPDATE address = ?, body = ?, timestamp = ?;");
-		
-		int paramIdx = 1;
-		
-		stmt.setInt(paramIdx++, sms.getId());
-		stmt.setString(paramIdx++, sms.getAddress());
-		stmt.setString(paramIdx++, sms.getBody());
-		stmt.setTimestamp(paramIdx++, new Timestamp(sms.getTimestamp().getTime()));
-		stmt.setBoolean(paramIdx++, sms.isIncoming());
-		
-		stmt.execute();
 	}
 }
