@@ -3,7 +3,8 @@ CREATE DATABASE smscactus CHARSET UTF8;
 USE smscactus;
 
 CREATE TABLE messages (
-	id INTEGER PRIMARY KEY,
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	phoneId INTEGER NOT NULL,
 	address varchar(25) not null,
 	body varchar(1024) not null,
 	timestamp DATETIME NOT NULL,
