@@ -3,33 +3,27 @@ package org.ocactus.sms.server;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 public abstract class ServletBase extends HttpServlet {
 	
-	protected Connection dbConnection;
-	
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		
+	protected Connection getDbConnection() throws ServletException {
 		try {
-			
-			ServletContext ctx = config.getServletContext();
-			Class.forName(ctx.getInitParameter("dbDriver")).newInstance();
-			dbConnection = DriverManager.getConnection(
-				ctx.getInitParameter("dbConnection"),
-				ctx.getInitParameter("dbUser"),
-				ctx.getInitParameter("dbPassword"));
-			
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			DataSource ds = (DataSource)
+			  envCtx.lookup("jdbc/smscactus");
+	
+			return ds.getConnection();
 		} catch(Exception ex) {
-			throw new ServletException("error connecting to database", ex);
+			throw new ServletException("couldn't connect to database", ex);
 		}
 	}
 	
@@ -67,14 +61,5 @@ public abstract class ServletBase extends HttpServlet {
 	public void defaultAction(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setStatus(404);
-	}
-	
-	@Override
-	public void destroy() {
-		try {
-			dbConnection.close();
-		} catch(Exception ex) {
-			log("Error closing database.", ex);
-		}
 	}
 }
