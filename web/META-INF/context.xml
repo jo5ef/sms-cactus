@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Context cachingAllowed="false">
-	<Resource name="jdbc/smscactus" auth="Container" type="javax.sql.DataSource"
-		username="smscactus" password="smscactus" driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost/smscactus?useUnicode=yes&amp;characterEncoding=utf8"
-		maxActive="8" maxIdle="4" />
-</Context>
