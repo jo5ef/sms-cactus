@@ -116,6 +116,7 @@ public class ArchivingService extends Service {
 		private Sms fromCursor(Cursor cursor, boolean incoming) {
 			int paramIdx = 0;
 			return new Sms(
+				-1,
 				cursor.getInt(paramIdx++),
 				cursor.getString(paramIdx++),
 				cursor.getString(paramIdx++),

@@ -4,14 +4,15 @@ import java.util.Date;
 
 public class Sms {
 
-	private int id;
+	private int id, phoneId;
 	private String address, body;
 	private Date timestamp;
 	private boolean incoming;
 	
-	public Sms(int id, String address, String body, Date timestamp, boolean incoming) {
+	public Sms(int id, int phoneId, String address, String body, Date timestamp, boolean incoming) {
 		super();
 		this.id = id;
+		this.phoneId = phoneId;
 		this.address = address;
 		this.body = body;
 		this.timestamp = timestamp;
@@ -20,6 +21,10 @@ public class Sms {
 
 	public int getId() {
 		return id;
+	}
+	
+	public int getPhoneId() {
+		return phoneId;
 	}
 	
 	public String getAddress() {

@@ -18,7 +18,7 @@ public class JSONUtils {
 	
 	public static JSONObject getJSONObject(Sms sms) throws JSONException {
 		JSONObject obj = new JSONObject();
-		obj.put("id", sms.getId());
+		obj.put("phoneId", sms.getPhoneId());
 		obj.put("address", sms.getAddress());
 		obj.put("body", sms.getBody());
 		obj.put("timestamp", sms.getTimestamp().getTime());
@@ -37,7 +37,7 @@ public class JSONUtils {
 	}
 	
 	public static Sms getSms(JSONObject obj) throws JSONException {
-		String[] required = new String[] { "id", "address", "body", "timestamp", "incoming" };
+		String[] required = new String[] { "phoneId", "address", "body", "timestamp", "incoming" };
 		for(String r : required) {
 			if(!obj.has(r)) {
 				throw new IllegalArgumentException("JSONObject is missing " + r);
@@ -45,7 +45,8 @@ public class JSONUtils {
 		}
 		
 		return new Sms(
-			obj.getInt("id"),
+			-1,
+			obj.getInt("phoneId"),
 			obj.getString("address"),
 			obj.getString("body"),
 			new Date(obj.getLong("timestamp")),

@@ -25,7 +25,7 @@ public class SmsCactus implements ISmsCactus {
 		
 		try {
 			PreparedStatement stmt = db.prepareStatement(
-				"SELECT id, address, body, timestamp, incoming " +
+				"SELECT id, phoneId, address, body, timestamp, incoming " +
 				"FROM messages ORDER BY timestamp DESC LIMIT ?");
 			
 			stmt.setInt(1, count);
@@ -35,6 +35,7 @@ public class SmsCactus implements ISmsCactus {
 			while(rs.next()) {
 				data.add(new Sms(
 					rs.getInt("id"),
+					rs.getInt("phoneId"),
 					rs.getString("address"),
 					rs.getString("body"),
 					rs.getTimestamp("timestamp"),
@@ -88,7 +89,6 @@ public class SmsCactus implements ISmsCactus {
 			db.createStatement().execute(sb.toString());
 			
 		} catch(SQLException ex) {
-			try { db.rollback(); } catch(SQLException e) { }
 			throw new RuntimeException(ex);
 		}
 		
@@ -99,12 +99,12 @@ public class SmsCactus implements ISmsCactus {
 		
 		try {
 			PreparedStatement stmt = db.prepareStatement(
-				"INSERT IGNORE INTO messages (id, address, body, timestamp, incoming)" +
+				"INSERT IGNORE INTO messages (phoneId, address, body, timestamp, incoming)" +
 				"VALUES (?, ?, ?, ?, ?);");
 			
 			for(Sms sms : data) {
 				int paramIdx = 1;
-				stmt.setInt(paramIdx++, sms.getId());
+				stmt.setInt(paramIdx++, sms.getPhoneId());
 				stmt.setString(paramIdx++, sms.getAddress());
 				stmt.setString(paramIdx++, sms.getBody());
 				stmt.setTimestamp(paramIdx++, new Timestamp(sms.getTimestamp().getTime()));
