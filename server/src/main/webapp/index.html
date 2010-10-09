@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>sms-cactus</title>
+		<link type="text/css" rel="stylesheet" href="style.css"/>
+	</head>
+	<body>
+		<div id="container">
+			<h1>sms-cactus</h1>
+			<form action="msg/send" class="sendform" method="post">
+				<input type="text" name="address" size="15"/>
+				<span class="count"></span>
+				<textarea name="text"></textarea>
+				<input type="submit" value="send"/>
+			</form>
+			<table id="messages">
+				<thead>
+					<tr>
+						<th>id</th>
+						<th>address</th>
+						<th>body</th>
+						<th>timestamp</th>
+						<th>incoming</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</body>
+	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+</html>
