@@ -1,5 +1,9 @@
-common/bin
-web/WEB-INF/classes
-web/WEB-INF/lib
-sms-cactus/bin
+common/target
+common/.classpath
+common/.project
+common/.settings
+server/target
+server/.classpath
+server/.project
+server/.settings
 .metadata/
