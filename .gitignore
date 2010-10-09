@@ -1,8 +1,8 @@
-common/target/
+common/target/*
 common/.classpath
 common/.project
 common/.settings
-server/target/
+server/target/*
 server/.classpath
 server/.project
 server/.settings
