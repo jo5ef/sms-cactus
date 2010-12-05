@@ -1,5 +1,11 @@
 $(document).ready(function() {
 	
+	var formatDate = function(d) {
+		var dd = function(x) { return x < 10 ? '0' + x : x; };
+		return d.getFullYear() + "-" + dd(d.getMonth() + 1) + "-" + dd(d.getDate()) +
+			" " + dd(d.getHours()) + ":" + dd(d.getMinutes()) + ":" + dd(d.getSeconds());
+	};
+	
 	$('textarea').keyup(function() {
 		$('span.count').html(this.value.length);
 	});
@@ -7,11 +13,10 @@ $(document).ready(function() {
 		for(var i = data.length - 1; i >= 0; i--) {
 			var timestamp = new Date(+data[i].timestamp);
 			$('#messages tbody').prepend('<tr>' +
-				'<td>' + data[i].id + '</td>' +
+				'<td>' + (data[i].incoming ? '&#10525;' : '&#10526;') + '</td>' +
 				'<td>' + data[i].address + '</td>' +
 				'<td>' + data[i].body + '</td>' +
-				'<td>' + timestamp + '</td>' +
-				'<td>' + data[i].incoming + '</td></tr>'); 
+				'<td><nobr>' + formatDate(timestamp) + '</nobr></td></tr>'); 
 		}
 	});
 });
