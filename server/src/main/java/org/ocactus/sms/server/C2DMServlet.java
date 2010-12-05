@@ -72,7 +72,7 @@ public class C2DMServlet extends ServletBase {
 				resp.getWriter().write("not logged in or registered");
 			} else {
 				c2dm.send();
-				resp.sendRedirect(req.getContextPath());
+				resp.sendRedirect(req.getContextPath() + "/");
 			}
 			
 			db.close();
