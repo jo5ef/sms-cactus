@@ -20,15 +20,16 @@ public class SmsCactus implements ISmsCactus {
 		this.db = db;
 	}
 	
-	public Sms[] latest(int count) {
+	public Sms[] list(int minId, int count) {
 		List<Sms> data = new ArrayList<Sms>();
 		
 		try {
 			PreparedStatement stmt = db.prepareStatement(
 				"SELECT id, phoneId, address, body, timestamp, incoming " +
-				"FROM messages ORDER BY timestamp DESC LIMIT ?");
+				"FROM messages WHERE id > ? ORDER BY timestamp DESC LIMIT ?");
 			
-			stmt.setInt(1, count);
+			stmt.setInt(1, minId);
+			stmt.setInt(2, count);
 			
 			ResultSet rs = stmt.executeQuery();
 			

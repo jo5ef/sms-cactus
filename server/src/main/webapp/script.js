@@ -9,14 +9,35 @@ $(document).ready(function() {
 	$('textarea').keyup(function() {
 		$('span.count').html(this.value.length);
 	});
-	$.getJSON('msg/latest', function(data) {
-		for(var i = data.length - 1; i >= 0; i--) {
-			var timestamp = new Date(+data[i].timestamp);
-			$('#messages tbody').prepend('<tr>' +
-				'<td>' + (data[i].incoming ? '&#10525;' : '&#10526;') + '</td>' +
-				'<td>' + data[i].address + '</td>' +
-				'<td>' + data[i].body + '</td>' +
-				'<td><nobr>' + formatDate(timestamp) + '</nobr></td></tr>'); 
+	
+	var lastid = 0;
+	
+	var addSms = function(sms) {
+	
+		var init = lastid == 0;		
+	
+		for(var i = sms.length - 1; i >= 0; i--) {
+			var timestamp = new Date(+sms[i].timestamp);
+			$('#messages tbody').prepend('<tr' + (init ? '>' : ' class="unread">') +
+				'<td>' + (sms[i].incoming ? '&#10525;' : '&#10526;') + '</td>' +
+				'<td>' + sms[i].address + '</td>' +
+				'<td>' + sms[i].body + '</td>' +
+				'<td><nobr>' + formatDate(timestamp) + '</nobr></td></tr>');
+			lastid = sms[i].id > lastid ? sms[i].id : lastid; 
 		}
+		if(!init && sms.length > 0) {
+			document.title = 'sms (' + sms.length + ')';
+		}
+	};
+	
+	$('body').click(function() {
+		document.title = 'sms';
+		$('.unread').removeClass('unread');
 	});
+	
+	window.setInterval(function() {
+		$.getJSON('msg/list?lastid=' + lastid, addSms); 
+	}, 2000);
+	
+	$.getJSON('msg/list?lastid=0', addSms);
 });

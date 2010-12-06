@@ -18,6 +18,7 @@ public class JSONUtils {
 	
 	public static JSONObject getJSONObject(Sms sms) throws JSONException {
 		JSONObject obj = new JSONObject();
+		obj.put("id", sms.getId());
 		obj.put("phoneId", sms.getPhoneId());
 		obj.put("address", sms.getAddress());
 		obj.put("body", sms.getBody());

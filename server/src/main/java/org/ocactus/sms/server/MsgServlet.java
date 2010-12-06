@@ -24,16 +24,22 @@ public class MsgServlet extends ServletBase {
 		resp.setCharacterEncoding(ENCODING.displayName());
 		resp.setContentType("application/json");
 	}
-
-	public void latest(HttpServletRequest req, HttpServletResponse resp)
+	
+	public void list(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
-		
+	
 		Connection db = getDbConnection();
 		ISmsCactus server = new SmsCactus(db);
 		
 		try {
-			setupResponse(resp);	
-			Sms[] latest = server.latest(25);
+			setupResponse(resp);
+			
+			int lastId = 0;
+			if(req.getParameter("lastid") != null) {
+				lastId = Integer.parseInt(req.getParameter("lastid"));
+			}
+			
+			Sms[] latest = server.list(lastId, 50);
 			
 			JSONArray data = JSONUtils.getJSONArray(latest);
 			data.write(resp.getWriter());
